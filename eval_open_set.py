@@ -20,27 +20,27 @@ def get_model(model_name, checkpoint_path, num_classes=1500):
     if model_name == "resnet101":
         model = ResNet101Iris(num_classes=num_classes)
         input_size = 224
-        model.load_state_dict(torch.load(checkpoint_path))
+        model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
 
     elif model_name == "resnet152":
         model = ResNet152Iris(num_classes=num_classes)
         input_size = 224
-        model.load_state_dict(torch.load(checkpoint_path))
+        model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
 
     elif model_name == "densenet161":
         model = DenseNet161Iris(num_classes=num_classes)
         input_size = 224
-        model.load_state_dict(torch.load(checkpoint_path))
+        model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
 
     elif model_name == "densenet201":
         model = DenseNet201Iris(num_classes=num_classes)
         input_size = 224
-        model.load_state_dict(torch.load(checkpoint_path))
+        model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
 
     elif model_name == "inception":
         model = InceptionV3Iris(num_classes=num_classes)
         input_size = 299
-        model.load_state_dict(torch.load(checkpoint_path))
+        model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
 
     else:
         print("Invalid model name, exiting...")
@@ -84,9 +84,10 @@ def enroll_identities(feature_extract_func, dataloader, device):
 
     return enrolled
 
-def evaluate(enrolled, feature_extract_func, dataloader, device, rank_n=50):
+def evaluate(enrolled, feature_extract_func, dataloader, device, rank_n=50, return_preds=False):
     total = 0
     rank_n_correct = np.zeros(rank_n)
+    preds_top1 = []
 
     with torch.no_grad():
         for input, labels in dataloader:
@@ -101,8 +102,9 @@ def evaluate(enrolled, feature_extract_func, dataloader, device, rank_n=50):
                     cosine_similarities = np.matmul(enrolled[key], pred_norm)
                     similarities_id[key] = np.max(cosine_similarities)
 
-                # Check for rank n accuracy
                 counter = Counter(similarities_id)
+                if return_preds:
+                    preds_top1.append(list(dict(counter.most_common(1)).keys())[0])
                 for i in range(1, rank_n + 1):
                     rank_n_vals = list(dict(counter.most_common(i)).keys())
                     rank_n_correct[i-1] += 1 if label in rank_n_vals else 0
@@ -112,6 +114,8 @@ def evaluate(enrolled, feature_extract_func, dataloader, device, rank_n=50):
     rank_1_accuracy =  rank_n_correct[0]
     rank_5_accuracy = rank_n_correct[4]
     print(f"Rank 1 accuracy: {rank_1_accuracy}, rank 5 accuracy: {rank_5_accuracy}")
+    if return_preds:
+        return rank_1_accuracy, rank_5_accuracy, rank_n_correct, preds_top1
     return rank_1_accuracy, rank_5_accuracy, rank_n_correct
 
 if __name__ == '__main__':
@@ -130,7 +134,8 @@ if __name__ == '__main__':
 
     model, input_size = get_model(model_name, checkpoint_path)
 
-    device = torch.device('cuda')
+    # device = torch.device('cuda')
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     model.to(device)
     model.eval()
 
@@ -142,12 +147,18 @@ if __name__ == '__main__':
     enrolled = enroll_identities(model.feature_extract_avg_pool, enrollment_dataloader, device)
 
     print("Running recognition evaluation...")
-    rank_1_accuracy, rank_5_accuracy, rank_n_accuracy = evaluate(enrolled, model.feature_extract_avg_pool, test_dataloader, device)
+    rank_1_accuracy, rank_5_accuracy, rank_n_accuracy, preds_top1 = evaluate(enrolled, model.feature_extract_avg_pool, test_dataloader, device, return_preds=True)
+
+    class_names = enrollment_dataloader.dataset.classes
+    test_paths = [p for p, _ in test_dataloader.dataset.samples]
+    for i, pred_idx in enumerate(preds_top1):
+        print(f"{test_paths[i]} -> {class_names[pred_idx]}")
 
     results = {
         "rank_1_acc": rank_1_accuracy,
         "rank_5_acc": rank_5_accuracy,
-        "rank_n_accuracies": list(rank_n_accuracy)
+        "rank_n_accuracies": list(rank_n_accuracy),
+        "predictions": [class_names[idx] for idx in preds_top1]
     }
 
     pathlib.Path("./results").mkdir(parents=True, exist_ok=True)

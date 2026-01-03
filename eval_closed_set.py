@@ -19,27 +19,27 @@ def get_model(model_name, checkpoint_path, num_classes=1500):
     if model_name == "resnet101":
         model = ResNet101Iris(num_classes=num_classes)
         input_size = 224
-        model.load_state_dict(torch.load(checkpoint_path))
+        model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
 
     elif model_name == "resnet152":
         model = ResNet152Iris(num_classes=num_classes)
         input_size = 224
-        model.load_state_dict(torch.load(checkpoint_path))
+        model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
 
     elif model_name == "densenet161":
         model = DenseNet161Iris(num_classes=num_classes)
         input_size = 224
-        model.load_state_dict(torch.load(checkpoint_path))
+        model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
 
     elif model_name == "densenet201":
         model = DenseNet201Iris(num_classes=num_classes)
         input_size = 224
-        model.load_state_dict(torch.load(checkpoint_path))
+        model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
 
     elif model_name == "inception":
         model = InceptionV3Iris(num_classes=num_classes)
         input_size = 299
-        model.load_state_dict(torch.load(checkpoint_path))
+        model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
 
     else:
         print("Invalid model name, exiting...")
@@ -73,7 +73,8 @@ if __name__ == '__main__':
     print("Loading model...")
     model, input_size = get_model(model_name, checkpoint_path)
 
-    device = torch.device('cuda')
+    # device = torch.device('cuda')
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     model.to(device)
     model.eval()
 
