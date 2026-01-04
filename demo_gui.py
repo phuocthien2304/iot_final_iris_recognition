@@ -193,6 +193,9 @@ class DemoGUI:
         self.preprocess_var = tk.BooleanVar(value=True)
         ttk.Checkbutton(query_frame, text="Preprocess raw image (segment + normalize + stack)", variable=self.preprocess_var, command=self.update_all_previews).grid(row=1, column=0, columnspan=3, sticky="w", pady=4)
 
+        self.show_images_var = tk.BooleanVar(value=True)
+        ttk.Checkbutton(query_frame, text="Show all preview images", variable=self.show_images_var, command=self.toggle_all_images).grid(row=2, column=0, columnspan=3, sticky="w", pady=2)
+
         # Run button and output
         run_frame = ttk.Frame(root)
         run_frame.grid(row=3, column=0, sticky="ew", padx=8, pady=6)
@@ -244,6 +247,13 @@ class DemoGUI:
         self._proc_tk = None
         # Hide the large preview area as requested
         self.preview_frame.grid_remove()
+
+    def toggle_all_images(self):
+        if self.show_images_var.get():
+            self.grid_prev_frame.grid()
+            self.update_all_previews()
+        else:
+            self.grid_prev_frame.grid_remove()
 
     def browse_ckpt(self):
         path = filedialog.askopenfilename(title="Select checkpoint .pth", filetypes=[("PyTorch checkpoint", "*.pth"), ("All files", "*.*")])
