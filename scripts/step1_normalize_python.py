@@ -110,8 +110,12 @@ def normalize_iris(img_path, output_path, radial_res=64, angular_res=256, enhanc
             clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
             polar = clahe.apply(polar)
         
+        stacked = np.tile(polar, (4, 1))
+        stacked = np.clip(stacked, 0, 255).astype(np.uint8)
+        stacked_rgb = cv2.cvtColor(stacked, cv2.COLOR_GRAY2RGB)
+        
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        cv2.imwrite(output_path, polar)
+        cv2.imwrite(output_path, stacked_rgb)
         
         return True, None
     except Exception as e:
