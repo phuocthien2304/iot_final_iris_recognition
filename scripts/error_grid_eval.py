@@ -126,7 +126,8 @@ def main():
     args = parser.parse_args()
 
     checkpoint_path = _norm(args.checkpoint)
-    model_name = args.arch
+    model_name = "best_iris_cnn_improved"
+    arch_name = args.arch
     enrollment_data_path = _norm(args.enroll)
     test_data_path = _norm(args.test)
     batch_size = args.batch_size
@@ -140,7 +141,7 @@ def main():
 
     pathlib.Path(save_prefix).mkdir(parents=True, exist_ok=True)
 
-    model, input_size = get_model(model_name, checkpoint_path)
+    model, input_size = get_model(arch_name, checkpoint_path)
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     model.to(device)
     model.eval()
@@ -190,8 +191,13 @@ def main():
     _save_error_grid(correct_flags, total_n, grid_cols, full_grid, f'Per-sample grid (full) - N={total_n}, errors={errors_full}')
     summary_rows.append(['full', total_n, errors_full, err_rate_full])
 
-    # Milestone grids with fixed target shapes
-    milestones = [100, 400, 900, total_n]
+    # Milestone grids with perfect square shapes (10x10, 20x20, 30x30, ...)
+    milestones = []
+    square_size = 10
+    while square_size * square_size <= total_n:
+        milestones.append(square_size * square_size)
+        square_size += 10
+    
     for m in milestones:
         if m <= 0 or m > total_n:
             continue

@@ -154,7 +154,7 @@ class DemoGUI:
         self.model_cb.grid(row=0, column=1, sticky="ew", padx=6)
 
         ttk.Label(model_frame, text="Checkpoint").grid(row=1, column=0, sticky="w")
-        self.ckpt_var = tk.StringVar(value="./models/resnet101_e_80_lr_2e-05_best.pth")
+        self.ckpt_var = tk.StringVar(value="./models/best_iris_cnn_improved.pth")
         self.ckpt_entry = ttk.Entry(model_frame, textvariable=self.ckpt_var)
         self.ckpt_entry.grid(row=1, column=1, sticky="ew", padx=6)
         ttk.Button(model_frame, text="Browse", command=self.browse_ckpt).grid(row=1, column=2, padx=6)

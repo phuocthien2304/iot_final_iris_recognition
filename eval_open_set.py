@@ -190,7 +190,7 @@ if __name__ == '__main__':
 
 
     print("Loading model...")
-    checkpoint_path = r"D:\wordspace\IoT Final\iris-recognition-cnn\models\resnet101_e_80_lr_2e-05_best.pth"
+    checkpoint_path = r"D:\wordspace\IoT Final\iris-recognition-cnn\models\best_iris_cnn_improved.pth"
     model_name = "resnet101"
     enrollment_data_path = r"D:\wordspace\IoT Final\iris-recognition-cnn\data\casia-iris-preprocessed\CASIA_thousand_norm_256_64_e_nn_open_set_stacked\enrollment"
     test_data_path = r"D:\wordspace\IoT Final\iris-recognition-cnn\data\casia-iris-preprocessed\CASIA_thousand_norm_256_64_e_nn_open_set_stacked\test"

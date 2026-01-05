@@ -1,0 +1,11 @@
+CLOSED-SET ACCURACY EVALUATION
+================================================================================
+
+Model: best_iris_cnn_improved
+Checkpoint: ./models/best_iris_cnn_improved.pth
+Test data: ./data/casia-iris-preprocessed/CASIA_thousand_norm_256_64_e_nn_stacked/test
+Device: cpu
+
+Total test samples: 1500
+Top-1 Accuracy: 96.20%
+Top-5 Accuracy: 98.73%

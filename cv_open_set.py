@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
 
     print("Loading model...")
-    checkpoint_path = "./models/resnet101_e_80_lr_2e-05_best.pth"
+    checkpoint_path = "./models/best_iris_cnn_improved.pth"
     model_name = "resnet101"
 
     data_path = "./data/CASIA_thousand_norm_256_64_e_nn_open_set_stacked"

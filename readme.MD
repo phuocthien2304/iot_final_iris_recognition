@@ -36,7 +36,7 @@ Ghi chú:
 - Checkpoint pretrained: https://drive.google.com/file/d/1pf-X13Dpsj-Q8p5Xzl0-uCoB1IeFmYD7/view?usp=sharing
 - Ảnh đã tiền xử lý (tùy chọn): https://drive.google.com/file/d/172GZgrAzNrA146BjFpF1vXtAH-zWymlA/view?usp=sharing
 
-Đặt các file .pth vào thư mục models/ (ví dụ: models/resnet101_e_80_lr_2e-05_best.pth). Các thư mục lớn như /models, /data đã nằm trong .gitignore.
+Đặt các file .pth vào thư mục models/ (ví dụ: models/best_iris_cnn_improved.pth). Các thư mục lớn như /models, /data đã nằm trong .gitignore.
 
 ## 3) Chạy demo GUI
 
@@ -67,15 +67,15 @@ python train.py --arch resnet101 --data_dir <PATH_TO_DATA> --epochs 80 --lr 2e-5
 `
 - Đánh giá closed set:
 `
-python eval_closed_set.py --arch resnet101 --data_dir <PATH_TO_DATA> --checkpoint models/resnet101_e_80_lr_2e-05_best.pth
+python eval_closed_set.py --arch resnet101 --data_dir <PATH_TO_DATA> --checkpoint models/best_iris_cnn_improved.pth
 `
 - Đánh giá open set:
 `
-python eval_open_set.py --arch resnet101 --enrollment_dir <PATH_ENROLL> --test_dir <PATH_TEST> --checkpoint models/resnet101_e_80_lr_2e-05_best.pth
+python eval_open_set.py --arch resnet101 --enrollment_dir <PATH_ENROLL> --test_dir <PATH_TEST> --checkpoint models/best_iris_cnn_improved.pth
 `
 - Cross-validation (open set):
 `
-python cv_open_set.py --arch resnet101 --data_dir <PATH_TO_DATA> --checkpoint models/resnet101_e_80_lr_2e-05_best.pth
+python cv_open_set.py --arch resnet101 --data_dir <PATH_TO_DATA> --checkpoint models/best_iris_cnn_improved.pth
 `
 
 ## 5) Tiền xử lý dữ liệu
