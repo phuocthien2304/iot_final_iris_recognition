@@ -1,6 +1,7 @@
-.idea
-data
+.idea/
+data/
 __pycache__/
 *.pyc
-templates
-models
+templates/
+models/
+.venv/

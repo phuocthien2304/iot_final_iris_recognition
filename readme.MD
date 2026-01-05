@@ -24,7 +24,7 @@ conda activate iris-recognition-cnn
 python -m venv .venv
 . .venv/Scripts/activate   # Windows: .venv\Scripts\activate
 pip install --upgrade pip
-pip install torch torchvision numpy pillow scikit-learn opencv-python
+pip install torch torchvision numpy pillow scikit-learn opencv-python matplotlib tqdm
 `
 
 Ghi chú:
@@ -45,7 +45,8 @@ python demo_gui.py
 `
 
 Trong giao diện:
-- Chọn kiến trúc: esnet101 hoặc densenet201, duyệt tới checkpoint .pth trong models/.
+- Chọn kiến trúc: 
+esnet101 hoặc densenet201, duyệt tới checkpoint .pth trong models/.
 - Thêm 5 ảnh ghi danh (enrollment): nhập tên + chọn ảnh. Hỗ trợ PNG/JPG/BMP/TIF/TIFF.
 - Chọn 1 ảnh truy vấn (query).
 - Tùy chọn: bật Preprocess raw image (segment + normalize + stack) để chuẩn hóa ảnh thô ngay khi chạy demo.
