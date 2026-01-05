@@ -1,18 +1,18 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
-from efficient_net.util import (
-    round_filters,
-    round_repeats,
-    drop_connect,
-    get_same_padding_conv2d,
-    get_model_params,
-    efficientnet_params,
-    load_pretrained_weights,
-    Swish,
-    MemoryEfficientSwish,
-    calculate_output_image_size
-)
+# from efficient_net.util import (
+#     round_filters,
+#     round_repeats,
+#     drop_connect,
+#     get_same_padding_conv2d,
+#     get_model_params,
+#     efficientnet_params,
+#     load_pretrained_weights,
+#     Swish,
+#     MemoryEfficientSwish,
+#     calculate_output_image_size
+# )
 from torchvision import models
 from torchvision.models.resnet import Bottleneck
 
@@ -40,32 +40,11 @@ class ResNet101Iris(models.ResNet):
         x = torch.flatten(x, 1)
         return x
 
-class ResNet152Iris(models.ResNet):
-
-    def __init__(self, num_classes=1500):
-        super().__init__(Bottleneck, [3, 8, 36, 3])
-        num_ftrs = self.fc.in_features
-        self.fc = nn.Linear(num_ftrs, num_classes)
-
 class DenseNet161Iris(models.DenseNet):
     def __init__(self, num_classes=1500):
         super().__init__(growth_rate=48,  block_config=(6, 12, 36, 24), num_init_features=96)
         num_ftrs = self.classifier.in_features
         self.classifier = nn.Linear(num_ftrs, num_classes)
-
-class DenseNet201Iris(models.DenseNet):
-    def __init__(self, num_classes=1500):
-        super().__init__(growth_rate=32,  block_config=(6, 12, 48, 32), num_init_features=64)
-        num_ftrs = self.classifier.in_features
-        self.classifier = nn.Linear(num_ftrs, num_classes)
-
-    def feature_extract_avg_pool(self, x):
-        features = self.features(x)
-        out = F.relu(features, inplace=True)
-        out = F.adaptive_avg_pool2d(out, (1, 1))
-        out = torch.flatten(out, 1)
-
-        return out
 
 class InceptionV3Iris(models.Inception3):
 

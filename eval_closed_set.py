@@ -8,7 +8,7 @@ import torch
 from torchvision import datasets, models, transforms
 import numpy as np
 
-from models import DenseNet161Iris, ResNet101Iris, ResNet152Iris, InceptionV3Iris, DenseNet201Iris
+from models import DenseNet161Iris, ResNet101Iris, InceptionV3Iris
 
 
 def get_model(model_name, checkpoint_path, num_classes=1500):
@@ -21,18 +21,8 @@ def get_model(model_name, checkpoint_path, num_classes=1500):
         input_size = 224
         model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
 
-    elif model_name == "resnet152":
-        model = ResNet152Iris(num_classes=num_classes)
-        input_size = 224
-        model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
-
     elif model_name == "densenet161":
         model = DenseNet161Iris(num_classes=num_classes)
-        input_size = 224
-        model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
-
-    elif model_name == "densenet201":
-        model = DenseNet201Iris(num_classes=num_classes)
         input_size = 224
         model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
 
@@ -60,10 +50,6 @@ def get_dataloader(data_path, input_size, batch_size=32):
     return DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=4)
 
 if __name__ == '__main__':
-
-
-    # checkpoint_path = "./models/densenet201_e_80_lr_0_0001_best.pth"
-    # model_name = "densenet201"
 
     checkpoint_path = "./models/resnet101_e_80_lr_2e-05_best.pth"
     model_name = "resnet101"

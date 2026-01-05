@@ -9,7 +9,7 @@ from PIL import Image, ImageTk
 import numpy as np
 import cv2
 
-from models import ResNet101Iris, DenseNet201Iris
+from models import ResNet101Iris
 
 
 def get_model(model_name, checkpoint_path, num_classes=1500):
@@ -19,11 +19,8 @@ def get_model(model_name, checkpoint_path, num_classes=1500):
     if model_name == "resnet101":
         model = ResNet101Iris(num_classes=num_classes)
         input_size = 224
-    elif model_name == "densenet201":
-        model = DenseNet201Iris(num_classes=num_classes)
-        input_size = 224
     else:
-        raise ValueError("Only 'resnet101' and 'densenet201' are supported in this demo")
+        raise ValueError("Only 'resnet101' is supported in this demo")
 
     # Load weights onto CPU first to avoid CUDA deserialization issues
     state = torch.load(checkpoint_path, map_location=torch.device('cpu'))
@@ -58,8 +55,8 @@ def _detect_circles(gray):
     pupil = None
     iris = None
     try:
-        circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, dp=1.5, minDist=h//8,
-                                   param1=120, param2=15, minRadius=max(8, h//40), maxRadius=h//4)
+        circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, dp=1.5, minDist=max(1, h//8),
+                                   param1=120, param2=15, minRadius=max(8, h//40), maxRadius=max(9, h//4))
         if circles is not None:
             circles = np.around(circles[0]).astype(int)
             best = None
@@ -153,7 +150,7 @@ class DemoGUI:
 
         ttk.Label(model_frame, text="Model name").grid(row=0, column=0, sticky="w")
         self.model_var = tk.StringVar(value="resnet101")
-        self.model_cb = ttk.Combobox(model_frame, textvariable=self.model_var, values=["resnet101", "densenet201"], state="readonly")
+        self.model_cb = ttk.Combobox(model_frame, textvariable=self.model_var, values=["resnet101"], state="readonly")
         self.model_cb.grid(row=0, column=1, sticky="ew", padx=6)
 
         ttk.Label(model_frame, text="Checkpoint").grid(row=1, column=0, sticky="w")

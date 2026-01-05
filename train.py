@@ -85,17 +85,6 @@ def initialize_model(model_name, num_classes, learning_rate, use_pretrained=True
         optimizer = optim.Adam(params_to_update, lr=learning_rate)
         criterion = nn.CrossEntropyLoss()
 
-    elif model_name == "resnet152":
-        """ Resnet101
-        """
-        model = models.resnet152(pretrained=use_pretrained)
-        num_ftrs = model.fc.in_features
-        model.fc = nn.Linear(num_ftrs, num_classes)
-        input_size = 224
-        params_to_update = model.parameters()
-        optimizer = optim.Adam(params_to_update, lr=learning_rate)
-        criterion = nn.CrossEntropyLoss()
-
     elif model_name == "resnet101-next":
         """ Resnet101
         """
@@ -136,17 +125,6 @@ def initialize_model(model_name, num_classes, learning_rate, use_pretrained=True
         model = models.densenet161(pretrained=use_pretrained)
         num_ftrs = model.classifier.in_features
         model.classifier = nn.Linear(num_ftrs, num_classes)
-        input_size = 224
-        params_to_update = model.parameters()
-        optimizer = optim.Adam(params_to_update, lr=learning_rate)
-        criterion = nn.CrossEntropyLoss()
-
-    elif model_name == "densenet201":
-        """ Densenet
-        """
-        model = models.densenet201(pretrained=use_pretrained)
-        num_ftrs = model.classifier.in_features
-        model.classifier = nn.Linear(num_ftrs , num_classes)
         input_size = 224
         params_to_update = model.parameters()
         optimizer = optim.Adam(params_to_update, lr=learning_rate)

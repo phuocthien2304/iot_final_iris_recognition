@@ -114,7 +114,7 @@ def _save_error_grid(correct_flags, n, cols, path, title):
 def main():
     parser = argparse.ArgumentParser("Per-sample error grid (progressive)")
     parser.add_argument('--checkpoint', required=True)
-    parser.add_argument('--arch', required=True, choices=['resnet101','resnet152','densenet161','densenet201','inception'])
+    parser.add_argument('--arch', required=True, choices=['resnet101','densenet161','inception'])
     parser.add_argument('--enroll', required=True)
     parser.add_argument('--test', required=True)
     parser.add_argument('--batch-size', type=int, default=196)

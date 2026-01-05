@@ -14,7 +14,7 @@ from sklearn.metrics import confusion_matrix
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-from models import DenseNet161Iris, ResNet101Iris, ResNet152Iris, InceptionV3Iris, DenseNet201Iris
+from models import DenseNet161Iris, ResNet101Iris, InceptionV3Iris
 
 
 def get_model(model_name, checkpoint_path, num_classes=1500):
@@ -27,18 +27,8 @@ def get_model(model_name, checkpoint_path, num_classes=1500):
         input_size = 224
         model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
 
-    elif model_name == "resnet152":
-        model = ResNet152Iris(num_classes=num_classes)
-        input_size = 224
-        model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
-
     elif model_name == "densenet161":
         model = DenseNet161Iris(num_classes=num_classes)
-        input_size = 224
-        model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
-
-    elif model_name == "densenet201":
-        model = DenseNet201Iris(num_classes=num_classes)
         input_size = 224
         model.load_state_dict(torch.load(checkpoint_path, map_location=torch.device('cpu')))
 
@@ -200,9 +190,6 @@ if __name__ == '__main__':
 
 
     print("Loading model...")
-    # checkpoint_path = "./models/densenet201_e_80_lr_0_0001_best.pth"
-    # model_name = "densenet201"
-
     checkpoint_path = r"D:\wordspace\IoT Final\iris-recognition-cnn\models\resnet101_e_80_lr_2e-05_best.pth"
     model_name = "resnet101"
     enrollment_data_path = r"D:\wordspace\IoT Final\iris-recognition-cnn\data\casia-iris-preprocessed\CASIA_thousand_norm_256_64_e_nn_open_set_stacked\enrollment"
@@ -213,7 +200,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Open-set evaluation with FAR/FRR and threshold sweep")
     parser.add_argument('--checkpoint', default=checkpoint_path)
-    parser.add_argument('--arch', default=model_name, choices=['resnet101','resnet152','densenet161','densenet201','inception'])
+    parser.add_argument('--arch', default=model_name, choices=['resnet101','densenet161','inception'])
     parser.add_argument('--enroll', default=enrollment_data_path)
     parser.add_argument('--test', default=test_data_path)
     parser.add_argument('--batch-size', type=int, default=batch_size)
