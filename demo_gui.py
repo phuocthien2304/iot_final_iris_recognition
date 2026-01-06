@@ -148,16 +148,11 @@ class DemoGUI:
         model_frame.grid(row=0, column=0, sticky="ew", padx=8, pady=6)
         model_frame.columnconfigure(1, weight=1)
 
-        ttk.Label(model_frame, text="Model name").grid(row=0, column=0, sticky="w")
-        self.model_var = tk.StringVar(value="resnet101")
-        self.model_cb = ttk.Combobox(model_frame, textvariable=self.model_var, values=["resnet101"], state="readonly")
-        self.model_cb.grid(row=0, column=1, sticky="ew", padx=6)
-
-        ttk.Label(model_frame, text="Checkpoint").grid(row=1, column=0, sticky="w")
+        ttk.Label(model_frame, text="Checkpoint").grid(row=0, column=0, sticky="w")
         self.ckpt_var = tk.StringVar(value="./models/best_iris_cnn_improved.pth")
         self.ckpt_entry = ttk.Entry(model_frame, textvariable=self.ckpt_var)
-        self.ckpt_entry.grid(row=1, column=1, sticky="ew", padx=6)
-        ttk.Button(model_frame, text="Browse", command=self.browse_ckpt).grid(row=1, column=2, padx=6)
+        self.ckpt_entry.grid(row=0, column=1, sticky="ew", padx=6)
+        ttk.Button(model_frame, text="Browse", command=self.browse_ckpt).grid(row=0, column=2, padx=6)
 
         # Enrollment panel (5 people)
         enroll_frame = ttk.LabelFrame(root, text="Enrollment (5 people)")
@@ -365,7 +360,7 @@ class DemoGUI:
 
     def run_demo(self):
         try:
-            model_name = self.model_var.get()
+            model_name = "resnet101"
             ckpt_path = self.ckpt_var.get()
             if not os.path.isfile(ckpt_path):
                 messagebox.showerror("Error", f"Checkpoint not found: {ckpt_path}")
@@ -373,7 +368,8 @@ class DemoGUI:
 
             device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
             self.log(f"Device: {device}")
-            self.log(f"Loading model: {model_name}")
+            self.log(f"Loading model: best_iris_cnn_improved.pth")
+
             model, input_size = get_model(model_name, ckpt_path)
             model.to(device)
             self.log("Model loaded.")
